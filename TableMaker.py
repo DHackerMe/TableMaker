@@ -7,6 +7,7 @@ def clear(): os.system("clear")
 tab = ""; tr = 0
 N = "00000000000000000000"
 
+clear()
 title()
 if input("Consider Name? (Y/n): ").upper() == "N": name = N
 else:
@@ -66,6 +67,7 @@ while True:
   if age != N: tab += (age+" "*(3-len(age)))
   if input("Repeat? (Y/n): ").upper() == "N":
     break
+  tab += "\n"
   clear()
 
 clear()
