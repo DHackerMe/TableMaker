@@ -1,8 +1,11 @@
-import os
+import platform; import os
 
-def title(): print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  | __ _| |_____ _ __\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
+def title(): print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  |v1.1_| |_by_DHMe__\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
 
-def clear(): os.system("clear")
+if platform.system() == "Windows":
+  def clear(): os.system("cls")
+else:
+  def clear(): os.system("clear")
 
 tab = ""; tr = 0
 N = "00000000000000000000"
@@ -25,7 +28,7 @@ else:
   age = ""
   tr += 3
 
-if tab == 0:
+if tr == 0:
   clear()
   title()
   print("Nothing to consider.")
@@ -35,27 +38,27 @@ tab += "\n"+"-"*tr
 clear()
 
 while True:
-
+  
+  title()
   while name != N:
-    title()
     name = input("Input the Name: ")
     if len(name) <= 15:
       break
     print("Name too long.")
   clear()
-  
+
+  title()
   while surname != N:
-    title()
     surname = input("Input the Surname: ")
     if len(surname) <= 15:
       break
     print("Surname too long.")
   clear()
-  
+
+  title()
   while age != N:
-    title()
-    age = input("Input the age: ")
-    if int(age) > 0 or int(age) < 120:
+    age = int(input("Input the age: "))
+    if age > 0 and age < 120:
       break
     print("Input a valid age.")
   clear()
@@ -64,7 +67,7 @@ while True:
   tab += "\n"
   if name != N: tab += (name+" "*(16-len(name)))
   if surname != N: tab += (surname+" "*(16-len(surname)))
-  if age != N: tab += (age+" "*(3-len(age)))
+  if age != N: tab += (str(age)+" "*(3-len(str(age))))
   if input("Repeat? (Y/n): ").upper() == "N":
     break
   tab += "\n"
