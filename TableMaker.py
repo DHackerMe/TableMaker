@@ -1,78 +1,173 @@
-import platform; import os
+import platform, os, glob, random, pandas as pd
 
-def title(): print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  |v1.1_| |_by_DHMe__\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
+def bye():
+    print(random.choice(["Bye!", "Goodbye!", "Take care!", "Farewell!", "See you soon!", "Until next time!"]))
+
+def title():
+    print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  |v2.0d| |_by_DHMe__\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
 
 if platform.system() == "Windows":
-  def clear(): os.system("cls")
+    def clear(): os.system("cls")
 else:
-  def clear(): os.system("clear")
+    def clear(): os.system("clear")
 
-tab = ""; tr = 0
-N = "00000000000000000000"
+def inpt(text):
+    try: return input(text)
+    except KeyboardInterrupt: clear(); title(); bye(); exit()
 
-clear()
-title()
-if input("Consider Name? (Y/n): ").upper() == "N": name = N
-else:
-  tab += "NAME            "
-  name = ""
-  tr += 16
-if input("Consider Surname? (Y/n): ").upper() == "N": surname = N
-else:
-  tab += "SURNAME         "
-  surname = ""
-  tr += 16
-if input("Consider Age? (Y/n): ").upper() == "N": age = N
-else:
-  tab += "AGE"
-  age = ""
-  tr += 3
+def list():
+    clear()
+    title()
 
-if tr == 0:
-  clear()
-  title()
-  print("Nothing to consider.")
-  exit()
+    csv_files = glob.glob("*.csv")
 
-tab += "\n"+"-"*tr
-clear()
+    if not csv_files:
+        print("No CSV files found in the current directory.")
+    else:
+        print("List of CSV files in the current directory:\n")
+        for i, file in enumerate(csv_files, start=1):
+            print(f"{i}. {file}")
+
+def new_table():
+    name = inpt("Input the Name: ")
+    surname = inpt("Input the Surname: ")
+    age = inpt("Input the age: ")
+    
+    return name, surname, age
 
 while True:
-  
-  title()
-  while name != N:
-    name = input("Input the Name: ")
-    if len(name) <= 15:
-      break
-    print("Name too long.")
-  clear()
+    clear()
+    title()
+    choice = inpt("Menu:\n[1] Create a new CSV file\n[2] List existing CSV files\n[3] Read an existing CSV file\n[4] Modify an existing CSV file\n ")
 
-  title()
-  while surname != N:
-    surname = input("Input the Surname: ")
-    if len(surname) <= 15:
-      break
-    print("Surname too long.")
-  clear()
+    if choice == "1":
+        data = {"Name": [], "Surname": [], "Age": []}
+        
+        repeat = "Y"
+        while repeat != "N":
+            clear()
+            title()
+            n, s, a = new_table()
+            data["Name"].append(n)
+            data["Surname"].append(s)
+            data["Age"].append(a)
+            
+            repeat = inpt("Input another? (Y/n): ").upper()
+        
+        clear()
+        title()
+        
+        filename = inpt("Enter the name to save the CSV file: ")
+    
+        if not filename.lower().endswith('.csv'): filename += '.csv'
 
-  title()
-  while age != N:
-    age = int(input("Input the age: "))
-    if age > 0 and age < 120:
-      break
-    print("Input a valid age.")
-  clear()
+        df = pd.DataFrame(data)
+    
+        df.to_csv(filename, index=False)
 
-  title()
-  tab += "\n"
-  if name != N: tab += (name+" "*(16-len(name)))
-  if surname != N: tab += (surname+" "*(16-len(surname)))
-  if age != N: tab += (str(age)+" "*(3-len(str(age))))
-  if input("Repeat? (Y/n): ").upper() == "N":
-    break
-  tab += "\n"
-  clear()
+        print("Saved as " + filename)
 
-clear()
-title()
-print(tab)
+        print(f"\n{df}")
+        inpt("\nPress Enter to continue...")
+    
+    if choice == "2":
+        try: 
+            list()
+            inpt("\nPress Enter to continue...")
+        except Exception as e:
+            clear()
+            title()
+            print(f"An error occurred: {e}")
+            inpt("Press Enter to continue...")
+
+    elif choice == "3":
+        try:
+            list()
+            
+            filename = inpt("\nEnter the CSV file name: ")
+
+            if not filename.lower().endswith('.csv'): filename += '.csv'
+
+            df = pd.read_csv(filename)
+
+            clear()
+            title()
+            print("Contents of the CSV file:\n")
+            print(df)
+
+            inpt("\nPress Enter to continue...")
+
+        except FileNotFoundError:
+            clear()
+            title()
+            print(f"File '{filename}' not found. Make sure the file exists.")
+            inpt("Press Enter to continue...")
+        except pd.errors.EmptyDataError:
+            clear()
+            title()
+            print(f"File '{filename}' is empty.")
+            inpt("Press Enter to continue...")
+        except Exception as e:
+            clear()
+            title()
+            print(f"An error occurred: {e}")
+            inpt("Press Enter to continue...")
+
+    elif choice == "4":
+        try:
+            list()
+            
+            filename = inpt("\nEnter the CSV file name to modify: ")
+
+            if not filename.lower().endswith('.csv'): filename += '.csv'
+
+            df = pd.read_csv(filename)
+
+            clear()
+            title()
+            print("Current contents of the CSV file:\n")
+            print(df)
+
+            row_index = int(inpt("\nEnter the index of the row to modify: "))
+
+            if row_index < 0 or row_index >= len(df):
+                print("Invalid index. Enter a valid index.")
+                inpt("Press Enter to continue...")
+                continue
+
+            clear()
+            title()
+            print("Enter new data for the selected row:\n")
+            n, s, a = new_table()
+
+            df.loc[row_index] = [n, s, a]
+
+            df.to_csv(filename, index=False)
+
+            clear()
+            title()
+            print("\nUpdated contents of the CSV file:\n")
+            print(df)
+
+            inpt("\nPress Enter to continue...")
+
+        except FileNotFoundError:
+            clear()
+            title()
+            print(f"File '{filename}' not found. Make sure the file exists.")
+            inpt("Press Enter to continue...")
+        except pd.errors.EmptyDataError:
+            clear()
+            title()
+            print(f"File '{filename}' is empty.")
+            inpt("Press Enter to continue...")
+        except ValueError:
+            clear()
+            title()
+            print("Invalid input. Enter a valid integer.")
+            inpt("Press Enter to continue...")
+        except Exception as e:
+            clear()
+            title()
+            print(f"An error occurred: {e}")
+            inpt("Press Enter to continue...")
