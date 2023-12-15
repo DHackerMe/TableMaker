@@ -19,7 +19,7 @@ def pandas(): #Check if pandas is installed
         else:
             print("Pandas installation cancelled.")
 def bye():
-    print(random.choice(["Bye!", "Goodbye!", "Take care!", "See you soon!", "Until next time!"]))
+    print(random.choice(["Bye!", "Goodbye!", "Take care!", "See you soon!", "Until next time!"])) #Farewell is not very friendly
 
 def title():
     print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  |v2.0d| |_by_DHMe__\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
