@@ -1,7 +1,25 @@
-import platform, os, glob, random, pandas as pd
+import platform, os, glob, random, subprocess, time,  pandas as pd #time and subprocess for def pandas
 
+def pandas(): #Check if pandas is installed
+    print("checking if pandas is installed...")
+    time.sleep(3)
+    try:
+        import pandas as pd
+        print("Pandas is installed!")
+        print("Enjoy :D")
+        time.sleep(3)
+    except ImportError:
+        install_pandas = input("Pandas is not installed. Do you want to install it now? (y/n): ")
+        if install_pandas.lower() == 'y':
+            try:
+                subprocess.check_call(['pip', 'install', 'pandas'])
+                print("Pandas has been installed successfully!")
+            except subprocess.CalledProcessError:
+                print("Error installing Pandas. Make sure you have pip installed.")
+        else:
+            print("Pandas installation cancelled.")
 def bye():
-    print(random.choice(["Bye!", "Goodbye!", "Take care!", "Farewell!", "See you soon!", "Until next time!"]))
+    print(random.choice(["Bye!", "Goodbye!", "Take care!", "See you soon!", "Until next time!"]))
 
 def title():
     print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  |v2.0d| |_by_DHMe__\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
@@ -35,6 +53,8 @@ def new_table():
     
     return name, surname, age
 
+pandas() #Calling the function "pandas" only one time
+
 while True:
     clear()
     title()
@@ -58,6 +78,7 @@ while True:
         title()
         
         filename = inpt("Enter the name to save the CSV file: ")
+        file_path = os.path.abspath(filename) #file path
     
         if not filename.lower().endswith('.csv'): filename += '.csv'
 
@@ -65,9 +86,11 @@ while True:
     
         df.to_csv(filename, index=False)
 
-        print("Saved as " + filename)
+        print(f"The file {filename} is saved at: {file_path}") #File name and file path
 
-        print(f"\n{df}")
+        print("NAME----------------SURNAME----------------AGE") #Organized List
+        for n, s, a in zip(data["Name"], data["Surname"], data["Age"]):
+            print(f"{n.ljust(20)}{s.ljust(20)}{a.rjust(6)}")
         inpt("\nPress Enter to continue...")
     
     if choice == "2":
