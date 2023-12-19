@@ -1,7 +1,27 @@
-import platform, os, glob, random, pandas as pd
+import platform, os, glob, random, subprocess, time,sys,importlib
 
+def repositories():  # Check if pandas is installed
+    print("Checking if all the repositories are installed...")
+    time.sleep(3)
+    try:
+        importlib.import_module('pandas')
+        global pd
+        pd = importlib.import_module('pandas')
+        print("Everything ok! :D")
+        print("Enjoy!")
+        time.sleep(3)
+    except ImportError:
+        print("Pandas is not installed. Installing...")
+        time.sleep(3)
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas"])
+        print("Pandas has been installed successfully!")
+        importlib.import_module('pandas')
+        global pd
+        pd = importlib.import_module('pandas')
+        time.sleep(3)
+repositories()
 def bye():
-    print(random.choice(["Bye!", "Goodbye!", "Take care!", "Farewell!", "See you soon!", "Until next time!"]))
+    print(random.choice(["Bye!", "Goodbye!", "Take care!", "See you soon!", "Until next time!"]))
 
 def title():
     print(" _____     _     _      __  __       _\n|_   ___ _| |__ | | ___|  \/  |v2.0d| |_by_DHMe__\n  | |/ _` | '_ \| |/ _ | |\/| |/ _` | |/ / _ | '__|\n  | | (_| | |_) | |  __| |  | | (_| |   |  __| |\n  |_|\__,_|_.__/|_|\___|_|  |_|\__,_|_|\_\___|_|\n")
@@ -58,6 +78,7 @@ while True:
         title()
         
         filename = inpt("Enter the name to save the CSV file: ")
+        file_path = os.path.abspath(filename)
     
         if not filename.lower().endswith('.csv'): filename += '.csv'
 
@@ -65,9 +86,11 @@ while True:
     
         df.to_csv(filename, index=False)
 
-        print("Saved as " + filename)
+        print(f"The file {filename} is saved at: {file_path}")
 
-        print(f"\n{df}")
+        print("NAME----------------SURNAME----------------AGE")
+        for n, s, a in zip(data["Name"], data["Surname"], data["Age"]):
+            print(f"{n.ljust(20)}{s.ljust(20)}{a.rjust(6)}")
         inpt("\nPress Enter to continue...")
     
     if choice == "2":
